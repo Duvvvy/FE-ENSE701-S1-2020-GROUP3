@@ -4,30 +4,30 @@ import Home from "./containers/Home/Home";
 import Login from "./containersLogin/Login";
 import Signup from "./containers/Signup/Signup";
 import NotFound from "./containers/NotFound/NotFound";
-
-
+import ArticleSubmission from "./containers/Forms/ArticleSubmission";
 
 export default function Routes() {
   return (
     <Switch>
+      <Route exact path="/">
+        <Home />
+      </Route>
 
-        <Route exact path="/">
-            <Home />
-        </Route>
+      <Route exact path="/login">
+        <Login />
+      </Route>
 
-        <Route exact path="/login">
-            <Login />
-        </Route>
+      <Route exact path="/signup">
+        <Signup />
+      </Route>
 
-        <Route exact path="/signup">
-            <Signup />
-        </Route>
+      <Route exact path="/articlesubmission">
+        <ArticleSubmission />
+      </Route>
 
-        <Route>
-            <NotFound />
-        </Route>
-
+      <Route>
+        <NotFound />
+      </Route>
     </Switch>
   );
 }
-
