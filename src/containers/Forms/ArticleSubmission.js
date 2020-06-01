@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 import FileUpload from "../../components/FileUpload";
+import { render } from "@testing-library/react";
 
-export default function Signup() {
+export default function SubmitArticle() {
   const [article, setArticle] = useState("");
   const [author, setAuthor] = useState("");
   const [title, setTitle] = useState("");
@@ -12,6 +13,7 @@ export default function Signup() {
   const [number, setNumber] = useState("");
   const [pages, setPages] = useState("");
   const [month, setMonth] = useState("");
+  const [submissionresponse, setResponse] = useState("");
 
   function validateForm() {
     return (
@@ -34,6 +36,38 @@ export default function Signup() {
 
   function handleSubmit(event) {
     event.preventDefault();
+    console.log("called");
+    var thePages = pages.split(["-"], 2);
+    var user = 3; //We will need to change this later to retreive the user currently signed in
+    var postbodydata = {
+      article: article,
+      author: author,
+      title: title,
+      journal: journal,
+      year: year,
+      volume: volume,
+      number: number,
+      userId: user,
+      pagefrom: thePages[0],
+      pageto: thePages[1] == null ? thePages[0] : thePages[1],
+      month: month,
+    };
+    var request = require("request");
+    request.post(
+      {
+        headers: { "content-type": "application/x-www-form-urlencoded" },
+        url: "http://localhost:9000/article/submitarticle",
+        form: postbodydata,
+      },
+      function (error, response, body) {
+        if (response.statusCode == 200) {
+          var resBody = JSON.parse(body);
+          setResponse(
+            "Article has been submitted with id " + resBody.ResponseText
+          );
+        }
+      }
+    );
   }
 
   return (
@@ -86,6 +120,7 @@ export default function Signup() {
         <Button block bsSize="large" disabled={!validateForm()} type="submit">
           Submit
         </Button>
+        <h2>{submissionresponse}</h2>
       </form>
       <br></br>
       <div>
