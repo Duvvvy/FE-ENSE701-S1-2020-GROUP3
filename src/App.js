@@ -4,7 +4,6 @@ import { Nav, Navbar, NavItem } from "react-bootstrap";
 import "./App.css";
 import Routes from "./Routes";
 
-
 function App() {
   return (
     <div className="App container">
@@ -19,6 +18,8 @@ function App() {
           <Nav pullRight>
             <NavItem href="/signup">Signup</NavItem>
             <NavItem href="/login">Login</NavItem>
+            <NavItem href="/ArticleSubmission">Submit Article</NavItem>
+            <NavItem href="/Search">Search</NavItem>
           </Nav>
         </Navbar.Collapse>
       </Navbar>
