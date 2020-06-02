@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import { Button, Col, form, Row,FormControl, ControlLabel, FormGroup} from "react-bootstrap";
-import { DatePicker} from "react-datepicker";
-import { render } from "@testing-library/react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import "./search.css";
 
 export default function SubmitSearch() {
-  const [field, setField] = useState("");
-  const [operator, setOperator] = useState("");
+  const [field, setField] = useState("title");
+  const [operator, setOperator] = useState("contains");
   const [value, setValue] = useState("");
   const [datefrom, setDateFrom] = useState(new Date("1990/01/01"));
   const [dateto, setDateTo] = useState(new Date());
-  const [submissionresponse, setResponse] = useState("");
+  const [results, setResult] = useState("");
 
   function validateForm() {
     return (
@@ -19,9 +19,10 @@ export default function SubmitSearch() {
     );
   }
 
-  function onUpload(theFile) {
-    const data = new FormData();
-    data.append("file", theFile);
+  function ArticleList() {
+    console.log(results);
+    if(results !=="") {
+    }
   }
 
   function handleSubmit(event) {
@@ -32,76 +33,67 @@ export default function SubmitSearch() {
       field: field,
       operator: operator,
       value: value,
-      datefrom: datefrom,
-    //   pageto: dateto == null ? currentDate : currentDate
+      datefromyear: datefrom.getFullYear(),
+      datefrommonth: datefrom.getMonth(),
+      datefromday: datefrom.getDay(),
+
+      datetoyear: dateto.getFullYear(),
+      datetomonth: dateto.getMonth(),
+      datetoday: dateto.getDay()
     };
-    var request = require("request");
-    request.post(
-      {
-        headers: { "content-type": "application/x-www-form-urlencoded" },
-        url: "http://localhost:9000/search",
-        form: postbodydata,
-      },
-      function (error, response, body) {
-        if (response.statusCode == 200) {
-          var resBody = JSON.parse(body);
-          setResponse(
-            "Article has been submitted with id " + resBody.ResponseText
-          );
-        }
-      }
-    );
+
+    console.log(postbodydata);
+    fetch('http://localhost:9000/articlesearch/search', {
+      method: 'POST',
+      headers:{ "content-type": "application/json" },
+      body: JSON.stringify(postbodydata)
+    }).then(response => response.json())
+    .then(response => {
+      console.log(response.searchResult)
+      setResult(JSON.parse(response.searchResult))       
+    })
   }
 
   return (
     <div className="Article">
-        <form class="form-inline" onSubmit={handleSubmit}>
-            <div class="description">
-
+        <form className="form-inline" onSubmit={handleSubmit}>
+            <div className="description">
+              {field}  {operator} {value}
             </div>
 
-            <div class="calendar">
-                <label for="date">Date Range from </label>
+            <div className="calendar">
+                <label>Date Range from </label>
                     <DatePicker
                     selected={datefrom}
-                    onChange={(e) => setDateFrom(e.target.data)}
-                    selectStart
-                    startDate={datefrom}
-                    endDate={dateto}
+                    onChange={date => setDateFrom(date)}
                     />
-                <label for="to">to</label>
+                <label>to</label>
                 <DatePicker
                     selected={dateto}
-                    onChange={(e) => setDateTo(e.target.data)}
-                    selectEnd
-                    startDate={datefrom}
-                    endDate={dateto}
-                    minDate={datefrom}
+                    onChange={date => setDateTo(date)}
                     />
             </div>
 
-            <div class="input-search">
-                <div class="field">
-                    <label for="field">Field: </label>
+            <div className="input-search">
+                <div className="field">
+                    <label>Field: </label>
                     <select 
                         value={field} 
                         onChange={(e) => setField(e.target.value)}
                         >
-                            <option value="" selected disabled hidden>Choose here</option>
-                            <option value="article title">Article Title</option>
-                            <option value="article source">Article Source</option>
+                            <option value="title">Article Title</option>
+                            <option value="source">Article Source</option>
                             <option value="author">Author</option>
                             <option value="method">Method</option>
                     </select>
                 </div>
 
-                <div class="operator">
-                    <label for="operator">Operator: </label>
+                <div className="operator">
+                    <label>Operator: </label>
                     <select 
                         value={operator} 
                         onChange={(e) => setOperator(e.target.value)}
                         >
-                            <option value="" selected disabled hidden>Choose here</option>
                             <option value="contains">Contains</option>
                             <option value="does not contain">Does not contain</option>
                             <option value="begins with">Beigns with</option>
@@ -110,8 +102,8 @@ export default function SubmitSearch() {
                     </select>
                 </div>
 
-                <div class="value">
-                    <label for="operator">Value: </label>
+                <div className="value">
+                    <label>Value: </label>
                     <input
                         type = "text"
                         value={value} 
@@ -120,10 +112,14 @@ export default function SubmitSearch() {
                 </div>
             </div>
             
-            <Button block bsSize="large" disabled={!validateForm()} type="search">
+            <button disabled={!validateForm()} type="search">
             Search
-            </Button> 
+            </button> 
         </form>
+
+        <div className="article">
+            {ArticleList()}
+        </div>
     </div>
   );
 }
