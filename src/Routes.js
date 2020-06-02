@@ -5,6 +5,7 @@ import Login from "./containersLogin/Login";
 import Signup from "./containers/Signup/Signup";
 import NotFound from "./containers/NotFound/NotFound";
 import ArticleSubmission from "./containers/Forms/ArticleSubmission";
+import Search from "./containers/Search/Search"
 
 export default function Routes() {
   return (
@@ -23,6 +24,10 @@ export default function Routes() {
 
       <Route exact path="/articlesubmission">
         <ArticleSubmission />
+      </Route>
+
+      <Route exact path="/search">
+        <Search />
       </Route>
 
       <Route>

@@ -19,6 +19,7 @@ function App() {
             <NavItem href="/signup">Signup</NavItem>
             <NavItem href="/login">Login</NavItem>
             <NavItem href="/ArticleSubmission">Submit Article</NavItem>
+            <NavItem href="/Search">Search</NavItem>
           </Nav>
         </Navbar.Collapse>
       </Navbar>
