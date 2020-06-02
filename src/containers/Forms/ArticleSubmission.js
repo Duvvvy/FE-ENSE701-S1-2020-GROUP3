@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 import FileUpload from "../../components/FileUpload";
 import { render } from "@testing-library/react";
+import AlertDialog from "../../components/AlertDialog";
 
 export default function SubmitArticle() {
   const [article, setArticle] = useState("");
@@ -14,6 +15,9 @@ export default function SubmitArticle() {
   const [pages, setPages] = useState("");
   const [month, setMonth] = useState("");
   const [submissionresponse, setResponse] = useState("");
+  const [popupWindow, setPopup] = useState(false);
+  const [popupWindowMessage, setPopupMessage] = useState("");
+  const [popupWindowTitle, setPopupTitle] = useState("");
 
   function validateForm() {
     return (
@@ -62,9 +66,17 @@ export default function SubmitArticle() {
       function (error, response, body) {
         if (response.statusCode == 200) {
           var resBody = JSON.parse(body);
-          setResponse(
+          setPopupTitle("Success");
+          setPopupMessage(
             "Article has been submitted with id " + resBody.ResponseText
           );
+          setPopup(true);
+        } else {
+          setPopupTitle("Internal Server Error");
+          setPopupMessage(
+            "Article has not been submitted, please contact support."
+          );
+          setPopup(true);
         }
       }
     );
@@ -117,6 +129,12 @@ export default function SubmitArticle() {
             onChange={(e) => setMonth(e.target.value)}
           />
         </FormGroup>
+        <AlertDialog
+          popupWindow={popupWindow}
+          toggle={setPopup}
+          title={popupWindowTitle}
+          message={popupWindowMessage}
+        ></AlertDialog>
         <Button block bsSize="large" disabled={!validateForm()} type="submit">
           Submit
         </Button>
