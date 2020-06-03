@@ -3,6 +3,9 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./search.css";
 
+import ObjectList from "react-object-list";
+import "react-object-list/dist/react-object-list.css";
+
 export default function SubmitSearch() {
   const [field, setField] = useState("title");
   const [operator, setOperator] = useState("contains");
@@ -20,8 +23,29 @@ export default function SubmitSearch() {
   }
 
   function ArticleList() {
-    console.log(results);
     if(results !=="") {
+      return(
+      <ObjectList
+        columns={[
+          {dataKey: 'id', header: 'ID'},
+          {dataKey: 'article', header: 'Article'},
+          {dataKey: 'title', header: 'Title'},
+          {dataKey: 'author', header: 'Author'},
+          {dataKey: 'journal', header: 'Journal'},
+          {dataKey: 'journalnumber', header: 'Number'},
+          {dataKey: 'journalvolume', header: 'Volume'},
+          {dataKey: 'pagesfrom', header: 'Page From'},
+          {dataKey: 'pagesto', header: 'Page To'},
+          {dataKey: 'journalmonth', header: 'Month'},
+          {dataKey: 'journalyear', header: 'Year'},
+        ]}
+        data={results}
+        meta={{
+          totalCount: results.length,
+        }}
+        favouritesEnabled={false}
+      />
+      )
     }
   }
 
@@ -50,7 +74,7 @@ export default function SubmitSearch() {
     }).then(response => response.json())
     .then(response => {
       console.log(response.searchResult)
-      setResult(JSON.parse(response.searchResult))       
+      setResult(response.searchResult)      
     })
   }
 
