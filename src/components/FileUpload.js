@@ -6,10 +6,6 @@ const Upload = ({changeControl}) => {
 
     const fileChanged=event=>{
       changeControl(event.target.files[0]);
-      const data = new FormData();
-      data.append("file", event.target.files[0]); 
-      var jsondata = JSON.stringify(data);
-      console.log(jsondata);
     }
 
 
