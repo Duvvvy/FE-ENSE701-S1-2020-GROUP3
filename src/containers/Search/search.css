@@ -1,0 +1,24 @@
+.input-search {
+
+    display: inline;
+    
+}
+
+.field {
+    display: inline;
+    margin: 10px;
+}
+
+.operator {
+    display: inline;
+    margin: 10px;
+}
+
+.value {
+    display: inline;
+    margin: 10px;
+}
+
+.calendar {
+    margin: 10px;
+}
