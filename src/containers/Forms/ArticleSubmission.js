@@ -3,6 +3,7 @@ import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 import FileUpload from "../../components/FileUpload";
 import { render } from "@testing-library/react";
 import AlertDialog from "../../components/AlertDialog";
+import bibtexParse from "bibtex-parse-js";
 
 export default function SubmitArticle() {
   const [article, setArticle] = useState("");
@@ -19,7 +20,6 @@ export default function SubmitArticle() {
   const [popupWindowMessage, setPopupMessage] = useState("");
   const [popupWindowTitle, setPopupTitle] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
-  
 
   function validateForm() {
     return (
@@ -36,12 +36,44 @@ export default function SubmitArticle() {
   }
 
   function onUpload() {
-    const reader = new FileReader()
-    reader.onload = async (e) => { 
-      const text = (e.target.result)
-      console.log(text)
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.readAsText(selectedFile);
+
+      reader.onload = async (e) => {
+        var file = e.target.result;
+        var bib = bibtexParse.toJSON(file);
+        if (bib.length != 0) {
+          processBibtex(bib);
+        } else {
+          setPopupTitle("Internal Server Error");
+          setPopupMessage(
+            "The file you are trying to upload in not in bibtex format."
+          );
+          setPopup(true);
+        }
+      };
+    } else {
+      setPopupTitle("Internal Server Error");
+      setPopupMessage("No file selected.");
+      setPopup(true);
     }
-    reader.readAsText(selectedFile);
+  }
+
+  function processBibtex(bib) {
+    var tags = bib[0].entryTags;
+    if (bib[0].entryType == "article") {
+      console.log(bib[0]);
+      setArticle(bib[0].citationKey);
+      setAuthor(tags.author);
+      setTitle(tags.title);
+      setJournal(tags.journal);
+      setYear(tags.year);
+      setVolume(tags.volume);
+      setNumber(tags.number);
+      setPages(tags.pages);
+      setMonth(tags.month);
+    }
   }
 
   function handleSubmit(event) {
