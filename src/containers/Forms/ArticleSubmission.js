@@ -18,6 +18,8 @@ export default function SubmitArticle() {
   const [popupWindow, setPopup] = useState(false);
   const [popupWindowMessage, setPopupMessage] = useState("");
   const [popupWindowTitle, setPopupTitle] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null);
+  
 
   function validateForm() {
     return (
@@ -33,9 +35,13 @@ export default function SubmitArticle() {
     );
   }
 
-  function onUpload(theFile) {
-    const data = new FormData();
-    data.append("file", theFile);
+  function onUpload() {
+    const reader = new FileReader()
+    reader.onload = async (e) => { 
+      const text = (e.target.result)
+      console.log(text)
+    }
+    reader.readAsText(selectedFile);
   }
 
   function handleSubmit(event) {
@@ -143,13 +149,13 @@ export default function SubmitArticle() {
       <br></br>
       <div>
         <h2>Or</h2>
-        <FileUpload />;
+        <FileUpload changeControl={setSelectedFile} />;
       </div>
       <div>
         <button
           type="button"
           className="btn btn-success btn-block"
-          onClick={() => onUpload(FileUpload.selectedFile)}
+          onClick={() => onUpload()}
         >
           Upload
         </button>
