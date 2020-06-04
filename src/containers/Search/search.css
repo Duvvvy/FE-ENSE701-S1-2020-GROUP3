@@ -1,0 +1,44 @@
+.input-search {
+
+    display: inline;
+    
+}
+
+.sort {
+    display:  inline;
+}
+
+.column {
+    display: inline;
+}
+
+.checkColumn {
+    display: inline;
+}
+
+.asc {
+    display: inline;
+}
+
+.check {
+    display: flex;
+}
+
+.field {
+    display: inline;
+    margin: 10px;
+}
+
+.operator {
+    display: inline;
+    margin: 10px;
+}
+
+.value {
+    display: inline;
+    margin: 10px;
+}
+
+.calendar {
+    margin: 10px;
+}
