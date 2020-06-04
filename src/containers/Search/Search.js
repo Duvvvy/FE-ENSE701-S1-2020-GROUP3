@@ -17,7 +17,7 @@ export default function SubmitSearch() {
   const [dateto, setDateTo] = useState(new Date());
   const [results, setResult] = useState([]);
   const [column, setColumn] = useState("id");
-  const [asc, setAsc] = useState(true);
+  const [asc, setAsc] = useState('true');
   
   
   const [idChecked, setIdChecked] = useState(true);
