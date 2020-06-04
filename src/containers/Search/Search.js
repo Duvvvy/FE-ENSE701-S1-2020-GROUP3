@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./search.css";
@@ -6,6 +7,7 @@ import "./search.css";
 import {Checkbox} from "react-bootstrap";
 import ObjectList from "react-object-list";
 import "react-object-list/dist/react-object-list.css";
+
 
 export default function SubmitSearch() {
   const [field, setField] = useState("title");
@@ -32,11 +34,7 @@ export default function SubmitSearch() {
   const columns = [];
 
   function validateForm() {
-    return (
-      field.length > 0 &&
-      operator.length > 0 &&
-      value.length > 0
-    );
+    return field.length > 0 && operator.length > 0 && value.length > 0;
   }
 
   function showColumns() {
@@ -242,6 +240,7 @@ export default function SubmitSearch() {
       field: field,
       operator: operator,
       value: value,
+
       datefromyear: datefrom.getFullYear(),
       datefrommonth: datefrom.getMonth(),
       datefromday: datefrom.getDay(),
