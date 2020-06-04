@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./search.css";
 
 import ObjectList from "react-object-list";
 import "react-object-list/dist/react-object-list.css";
+
 
 export default function SubmitSearch() {
   const [field, setField] = useState("title");
@@ -15,11 +17,7 @@ export default function SubmitSearch() {
   const [results, setResult] = useState("");
 
   function validateForm() {
-    return (
-      field.length > 0 &&
-      operator.length > 0 &&
-      value.length > 0
-    );
+    return field.length > 0 && operator.length > 0 && value.length > 0;
   }
 
   function ArticleList() {
@@ -57,6 +55,7 @@ export default function SubmitSearch() {
       field: field,
       operator: operator,
       value: value,
+
       datefromyear: datefrom.getFullYear(),
       datefrommonth: datefrom.getMonth(),
       datefromday: datefrom.getDay(),
@@ -64,6 +63,7 @@ export default function SubmitSearch() {
       datetoyear: dateto.getFullYear(),
       datetomonth: dateto.getMonth(),
       datetoday: dateto.getDay()
+
     };
 
     console.log(postbodydata);
@@ -80,6 +80,7 @@ export default function SubmitSearch() {
 
   return (
     <div className="Article">
+
         <form className="form-inline" onSubmit={handleSubmit}>
             <div className="description">
               {field}  {operator} {value}
