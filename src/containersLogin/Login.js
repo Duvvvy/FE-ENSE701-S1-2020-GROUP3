@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 import "./Login.css";
+import {apiService} from "../services/apiService";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -8,10 +9,13 @@ export default function Login() {
 
   function validateForm() {
     return email.length > 0 && password.length > 0;
+    console.log("ayy");
   }
 
-  function handleSubmit(event) {
-    event.preventDefault();
+  async function handleSubmit() {
+    var apiService = new apiService();
+    var result = await apiService.sendLogin(this.state.email, this.state.password)
+    console.log(result)
   }
 
   return (
