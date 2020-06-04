@@ -4,6 +4,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./search.css";
 
+import {Checkbox} from "react-bootstrap";
 import ObjectList from "react-object-list";
 import "react-object-list/dist/react-object-list.css";
 
@@ -14,29 +15,82 @@ export default function SubmitSearch() {
   const [value, setValue] = useState("");
   const [datefrom, setDateFrom] = useState(new Date("1990/01/01"));
   const [dateto, setDateTo] = useState(new Date());
-  const [results, setResult] = useState("");
+  const [results, setResult] = useState([]);
+  const [column, setColumn] = useState("id");
+  const [asc, setAsc] = useState(true);
+  
+  
+  const [idChecked, setIdChecked] = useState(true);
+  const [articleChecked, setArticleChecked] = useState(true);
+  const [titleChecked, setTitleChecked] = useState(true);
+  const [authorChecked, setAuthorChecked] = useState(true);
+  const [journalChecked, setJournalChecked] = useState(true);
+  const [journalNumberChecked, setJournalNumberChecked] = useState(true);
+  const [journalVolumeChecked, setJournalVolumeChecked] = useState(true);
+  const [pagesFromChecked, setPagesFromChecked] = useState(true);
+  const [pagesToChecked, setPagesToChecked] = useState(true);
+  const [journalMonthChecked, setJournalMonthChecked] = useState(true);
+  const [journalYearChecked, setJournalYearChecked] = useState(true);
+  const columns = [];
 
   function validateForm() {
     return field.length > 0 && operator.length > 0 && value.length > 0;
+  }
+
+  function showColumns() {
+    if(idChecked) {
+      columns.push({dataKey: 'id', header: 'ID'})
+    }
+    if(articleChecked) {
+      columns.push({dataKey: 'article', header: 'Article'})
+    }
+    if(titleChecked) {
+      columns.push({dataKey: 'title', header: 'Title'})
+    }
+    if(authorChecked) {
+      columns.push({dataKey: 'author', header: 'Author'})
+    }
+    if(journalChecked) {
+      columns.push({dataKey: 'journal', header: 'Journal'})
+    }
+    if(journalNumberChecked) {
+      columns.push({dataKey: 'journalnumber', header: 'Number'})
+    }
+    if(journalVolumeChecked) {
+      columns.push({dataKey: 'journalvolume', header: 'Volume'})
+    }
+    if(pagesFromChecked) {
+      columns.push({dataKey: 'pagesfrom', header: 'Page From'})
+    }
+    if(pagesToChecked) {
+      columns.push({dataKey: 'pagesto', header: 'Page To'})
+    }
+    if(journalMonthChecked) {
+      columns.push({dataKey: 'journalmonth', header: 'Month'})
+    }
+    if(journalYearChecked) {
+      columns.push({dataKey: 'journalyear', header: 'Year'})
+    }
   }
 
   function ArticleList() {
     if(results !=="") {
       return(
       <ObjectList
-        columns={[
-          {dataKey: 'id', header: 'ID'},
-          {dataKey: 'article', header: 'Article'},
-          {dataKey: 'title', header: 'Title'},
-          {dataKey: 'author', header: 'Author'},
-          {dataKey: 'journal', header: 'Journal'},
-          {dataKey: 'journalnumber', header: 'Number'},
-          {dataKey: 'journalvolume', header: 'Volume'},
-          {dataKey: 'pagesfrom', header: 'Page From'},
-          {dataKey: 'pagesto', header: 'Page To'},
-          {dataKey: 'journalmonth', header: 'Month'},
-          {dataKey: 'journalyear', header: 'Year'},
-        ]}
+      columns={columns}
+        //columns={[
+          //{dataKey: 'id', header: 'ID'},
+          // {dataKey: 'article', header: 'Article'},
+          // {dataKey: 'title', header: 'Title'},
+          // {dataKey: 'author', header: 'Author'},
+          // {dataKey: 'journal', header: 'Journal'},
+          // {dataKey: 'journalnumber', header: 'Number'},
+          // {dataKey: 'journalvolume', header: 'Volume'},
+          // {dataKey: 'pagesfrom', header: 'Page From'},
+          // {dataKey: 'pagesto', header: 'Page To'},
+          // {dataKey: 'journalmonth', header: 'Month'},
+          // {dataKey: 'journalyear', header: 'Year'},
+        //]}
         data={results}
         meta={{
           totalCount: results.length,
@@ -46,6 +100,137 @@ export default function SubmitSearch() {
       )
     }
   }
+
+  function columnCheck() {
+    showColumns()
+    return (
+      <div className = "check">
+        <div>
+          <label>ID|</label>
+            <Checkbox
+              checked={idChecked}
+              onChange={handleId}
+              />
+          </div>
+
+        <div>
+          <label>Article|</label>
+            <Checkbox
+              checked={articleChecked}
+              onChange={handleArticle}
+              />
+          </div>
+
+          <div>
+          <label>Title|</label>
+            <Checkbox
+              checked={titleChecked}
+              onChange={handleTitle}
+              />
+          </div>
+
+          <div>
+          <label>Author|</label>
+            <Checkbox
+              checked={authorChecked}
+              onChange={handleAuthor}
+              />
+          </div>
+
+          <div>
+          <label>Journal|</label>
+            <Checkbox
+              checked={journalChecked}
+              onChange={handleJournal}
+              />
+          </div>
+
+          <div>
+          <label>Number|</label>
+            <Checkbox
+              checked={journalNumberChecked}
+              onChange={handleNumber}
+              />
+          </div>
+
+          <div>
+          <label>Volume|</label>
+            <Checkbox
+              checked={journalVolumeChecked}
+              onChange={handleVolume}
+              />
+          </div>
+
+          <div>
+          <label>Page From|</label>
+            <Checkbox
+              checked={pagesFromChecked}
+              onChange={handlePageFrom}
+              />
+          </div>
+
+          <div>
+          <label>Page To|</label>
+            <Checkbox
+              checked={pagesToChecked}
+              onChange={handlePageTo}
+              />
+          </div>
+
+          <div>
+          <label>Month|</label>
+            <Checkbox
+              checked={journalMonthChecked}
+              onChange={handleMonth}
+              />
+          </div>
+
+          <div>
+          <label>Year|</label>
+            <Checkbox
+              checked={journalYearChecked}
+              onChange={handleYear}
+              />
+          </div>
+        </div>
+    );
+  }
+
+  function handleId() {
+    setIdChecked(!idChecked)
+  }
+  function handleArticle() {
+    setArticleChecked(!articleChecked)
+  }
+  function handleTitle() {
+    setTitleChecked(!titleChecked)
+  }
+  function handleAuthor() {
+    setAuthorChecked(!authorChecked)
+  }
+  function handleJournal() {
+    setJournalChecked(!journalChecked)
+  }
+  function handleNumber() {
+    setJournalNumberChecked(!journalNumberChecked)
+  }
+  function handleVolume() {
+    setJournalVolumeChecked(!journalVolumeChecked)
+  }
+
+  function handlePageFrom() {
+    setPagesFromChecked(!pagesFromChecked)
+  }
+  function handlePageTo() {
+    setPagesToChecked(!pagesToChecked)
+  }
+  function handleMonth() {
+    setJournalMonthChecked(!journalMonthChecked)
+  }
+  function handleYear() {
+    setJournalYearChecked(!journalYearChecked)
+  }
+
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -62,7 +247,10 @@ export default function SubmitSearch() {
 
       datetoyear: dateto.getFullYear(),
       datetomonth: dateto.getMonth(),
-      datetoday: dateto.getDay()
+      datetoday: dateto.getDay(),
+
+      column: column,
+      asc: asc,
 
     };
 
@@ -74,77 +262,111 @@ export default function SubmitSearch() {
     }).then(response => response.json())
     .then(response => {
       console.log(response.searchResult)
-      setResult(response.searchResult)      
+      setResult(response.searchResult)     
     })
   }
 
   return (
     <div className="Article">
-
-        <form className="form-inline" onSubmit={handleSubmit}>
-            <div className="description">
-              {field}  {operator} {value}
-            </div>
-
-            <div className="calendar">
-                <label>Date Range from </label>
-                    <DatePicker
-                    selected={datefrom}
-                    onChange={date => setDateFrom(date)}
-                    />
-                <label>to</label>
-                <DatePicker
-                    selected={dateto}
-                    onChange={date => setDateTo(date)}
-                    />
-            </div>
-
-            <div className="input-search">
-                <div className="field">
-                    <label>Field: </label>
-                    <select 
-                        value={field} 
-                        onChange={(e) => setField(e.target.value)}
-                        >
-                            <option value="title">Article Title</option>
-                            <option value="source">Article Source</option>
-                            <option value="author">Author</option>
-                            <option value="method">Method</option>
-                    </select>
-                </div>
-
-                <div className="operator">
-                    <label>Operator: </label>
-                    <select 
-                        value={operator} 
-                        onChange={(e) => setOperator(e.target.value)}
-                        >
-                            <option value="contains">Contains</option>
-                            <option value="does not contain">Does not contain</option>
-                            <option value="begins with">Beigns with</option>
-                            <option value="ends with">Ends with</option>
-                            <option value="is equal to">Is equal to</option>
-                    </select>
-                </div>
-
-                <div className="value">
-                    <label>Value: </label>
-                    <input
-                        type = "text"
-                        value={value} 
-                        onChange={(e) => setValue(e.target.value)}
-                        />
-                </div>
-            </div>
-            
-            <button disabled={!validateForm()} type="search">
-            Search
-            </button> 
-        </form>
-
-        <div className="article">
-            {ArticleList()}
+      <form className="form-inline" onSubmit={handleSubmit}>
+        <div className="description">
+          {field}  {operator} {value}
         </div>
+
+        <div className="calendar">
+          <label>Date Range from </label>
+            <DatePicker
+            selected={datefrom}
+            onChange={date => setDateFrom(date)}
+            />
+          <label>to</label>
+          <DatePicker
+              selected={dateto}
+              onChange={date => setDateTo(date)}
+           />
+        </div>
+
+        <div className="input-search">
+          <div className="field">
+              <label>Field: </label>
+              <select 
+                value={field} 
+                onChange={(e) => setField(e.target.value)}
+                >
+                <option value="title">Article Title</option>
+                <option value="source">Article Source</option>
+                <option value="author">Author</option>
+                <option value="method">Method</option>
+              </select>
+          </div>
+
+          <div className="operator">
+            <label>Operator: </label>
+            <select 
+              value={operator} 
+              onChange={(e) => setOperator(e.target.value)}
+              >
+              <option value="contains">Contains</option>
+              <option value="does not contain">Does not contain</option>
+              <option value="begins with">Beigns with</option>
+              <option value="ends with">Ends with</option>
+              <option value="is equal to">Is equal to</option>
+            </select>
+          </div>
+
+          <div className="value">
+            <label>Value: </label>
+            <input
+                type = "text"
+                value={value} 
+                onChange={(e) => setValue(e.target.value)}
+                />
+          </div>
+        </div>
+
+        <div className="sort">
+          <div className="asc">
+            <select 
+              value={asc} 
+              onChange={(e) => setAsc(e.target.value)}
+              >
+              <option value={true}>Ascending</option>
+              <option value={false}>Descending</option>
+            </select>
+          </div>
+
+          <div className="column">
+            <select 
+              value={column} 
+              onChange={(e) => setColumn(e.target.value)}
+              >
+              <option value="id">Id</option>
+              <option value="article">Article</option>
+              <option value="author">Author</option>
+              <option value="title">Title</option>
+              <option value="journal">Journal</option>
+              <option value="journalnumber">Journal Number</option>
+              <option value="journalvolume">Journal Volume</option>
+              <option value="journalmonth">Month</option>
+              <option value="journalyear">Year</option>
+              <option value="pagesfrom">Page From</option>
+              <option value="pagestwo">Page Two</option>
+            </select>
+          </div>
+        </div>
+          
+        <button disabled={!validateForm()} type="search">
+        Search
+        </button> 
+      </form>
+
+      <div className="checkColumn">
+        {columnCheck()}
+      </div>
+
+      <div className="article">
+            {ArticleList()}
+      </div>
     </div>
   );
 }

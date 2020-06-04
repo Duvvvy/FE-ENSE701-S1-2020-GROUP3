@@ -4,6 +4,26 @@
     
 }
 
+.sort {
+    display:  inline;
+}
+
+.column {
+    display: inline;
+}
+
+.checkColumn {
+    display: inline;
+}
+
+.asc {
+    display: inline;
+}
+
+.check {
+    display: flex;
+}
+
 .field {
     display: inline;
     margin: 10px;
