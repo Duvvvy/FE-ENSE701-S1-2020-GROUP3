@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
+import {
+  Button,
+  FormGroup,
+  FormControl,
+  ControlLabel,
+  MenuItem,
+  DropdownButton,
+} from "react-bootstrap";
 import FileUpload from "../../components/FileUpload";
 import { render } from "@testing-library/react";
 import AlertDialog from "../../components/AlertDialog";
@@ -7,6 +14,7 @@ import bibtexParse from "bibtex-parse-js";
 
 export default function SubmitArticle() {
   const [article, setArticle] = useState("");
+  const [editor, setEditor] = useState("");
   const [author, setAuthor] = useState("");
   const [title, setTitle] = useState("");
   const [journal, setJournal] = useState("");
@@ -15,11 +23,15 @@ export default function SubmitArticle() {
   const [number, setNumber] = useState("");
   const [pages, setPages] = useState("");
   const [month, setMonth] = useState("");
+  const [publisher, setPublisher] = useState("");
+  const [series, setSeries] = useState("");
+  const [edition, setEdition] = useState("");
   const [submissionresponse, setResponse] = useState("");
   const [popupWindow, setPopup] = useState(false);
   const [popupWindowMessage, setPopupMessage] = useState("");
   const [popupWindowTitle, setPopupTitle] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
+  const [dropdown, setDropdown] = useState("article");
 
   function validateForm() {
     return (
@@ -62,17 +74,31 @@ export default function SubmitArticle() {
 
   function processBibtex(bib) {
     var tags = bib[0].entryTags;
-    if (bib[0].entryType == "article") {
-      console.log(bib[0]);
+    var entryType = bib[0].entryType;
+    if (entryType == "article" || entryType == "book") {
       setArticle(bib[0].citationKey);
-      setAuthor(tags.author);
-      setTitle(tags.title);
-      setJournal(tags.journal);
-      setYear(tags.year);
-      setVolume(tags.volume);
-      setNumber(tags.number);
-      setPages(tags.pages);
-      setMonth(tags.month);
+      setAuthor(tags.author == null ? "" : tags.author);
+      setTitle(tags.title == null ? "" : tags.title);
+      setYear(tags.year == null ? "" : tags.year);
+      setVolume(tags.volume == null ? "" : tags.volume);
+      setNumber(tags.number == null ? "" : tags.number);
+      setMonth(
+        tags.month == null
+          ? ""
+          : (new Date(tags.month + " 1, 2012").getMonth() + 1).toString()
+      );
+      if (entryType == "article") {
+        setDropdown("article");
+        setJournal(tags.journal == null ? "" : tags.journal);
+        setPages(tags.pages == null ? "" : tags.pages);
+      } else if (entryType == "book") {
+        setDropdown("book");
+        setArticle(bib[0].citationKey);
+        setPublisher(tags.publisher == null ? "" : tags.publisher);
+        setEdition(tags.edition == null ? "" : tags.edition);
+        setEditor(tags.editor == null ? "" : tags.editor);
+        setSeries(tags.series == null ? "" : tags.series);
+      }
     }
   }
 
@@ -81,19 +107,40 @@ export default function SubmitArticle() {
     console.log("called");
     var thePages = pages.split(["-"], 2);
     var user = 3; //We will need to change this later to retreive the user currently signed in
-    var postbodydata = {
-      article: article,
-      author: author,
-      title: title,
-      journal: journal,
-      year: year,
-      volume: volume,
-      number: number,
-      userId: user,
-      pagefrom: thePages[0],
-      pageto: thePages[1] == null ? thePages[0] : thePages[1],
-      month: month,
-    };
+    var postbodydata;
+    if (dropdown == "article")
+      postbodydata = {
+        type: dropdown,
+        article: article,
+        author: author,
+        title: title,
+        journal: journal,
+        year: year,
+        volume: volume,
+        number: number,
+        userId: user,
+        pagefrom: thePages[0],
+        pageto: thePages[1] == null ? thePages[0] : thePages[1],
+        month: month,
+      };
+    if (dropdown == "book") {
+      postbodydata = {
+        type: dropdown,
+        article: article,
+        author: author,
+        title: title,
+        year: year,
+        volume: volume,
+        number: number,
+        userId: user,
+        month: month,
+        editor: editor,
+        publisher: publisher,
+        series: series,
+        author: author,
+        edition: edition,
+      };
+    }
     var request = require("request");
     request.post(
       {
@@ -122,6 +169,22 @@ export default function SubmitArticle() {
 
   return (
     <div className="Article">
+      <DropdownButton title={dropdown}>
+        <MenuItem
+          onSelect={() => {
+            setDropdown("article");
+          }}
+        >
+          Article
+        </MenuItem>
+        <MenuItem
+          onSelect={() => {
+            setDropdown("book");
+          }}
+        >
+          Book
+        </MenuItem>
+      </DropdownButton>
       <form onSubmit={handleSubmit}>
         <FormGroup controlId="ArticleForm" bsSize="small">
           <ControlLabel>article</ControlLabel>
@@ -134,16 +197,56 @@ export default function SubmitArticle() {
             value={author}
             onChange={(e) => setAuthor(e.target.value)}
           />
+          {dropdown === "book" && (
+            <div>
+              <ControlLabel>editor</ControlLabel>
+              <FormControl
+                value={editor}
+                onChange={(e) => setEditor(e.target.value)}
+              />
+            </div>
+          )}
           <ControlLabel>title</ControlLabel>
           <FormControl
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
-          <ControlLabel>journal</ControlLabel>
-          <FormControl
-            value={journal}
-            onChange={(e) => setJournal(e.target.value)}
-          />
+          {dropdown === "book" && (
+            <div>
+              <ControlLabel>edition</ControlLabel>
+              <FormControl
+                value={edition}
+                onChange={(e) => setEdition(e.target.value)}
+              />
+            </div>
+          )}
+          {dropdown === "article" && (
+            <div>
+              <ControlLabel>journal</ControlLabel>
+              <FormControl
+                value={journal}
+                onChange={(e) => setJournal(e.target.value)}
+              />
+            </div>
+          )}
+          {dropdown === "book" && (
+            <div>
+              <ControlLabel>publisher</ControlLabel>
+              <FormControl
+                value={publisher}
+                onChange={(e) => setPublisher(e.target.value)}
+              />
+            </div>
+          )}
+          {dropdown === "book" && (
+            <div>
+              <ControlLabel>series</ControlLabel>
+              <FormControl
+                value={series}
+                onChange={(e) => setSeries(e.target.value)}
+              />
+            </div>
+          )}
           <ControlLabel>year</ControlLabel>
           <FormControl value={year} onChange={(e) => setYear(e.target.value)} />
           <ControlLabel>volume</ControlLabel>
@@ -156,11 +259,15 @@ export default function SubmitArticle() {
             value={number}
             onChange={(e) => setNumber(e.target.value)}
           />
-          <ControlLabel>pages</ControlLabel>
-          <FormControl
-            value={pages}
-            onChange={(e) => setPages(e.target.value)}
-          />
+          {dropdown === "article" && (
+            <div>
+              <ControlLabel>pages</ControlLabel>
+              <FormControl
+                value={pages}
+                onChange={(e) => setPages(e.target.value)}
+              />
+            </div>
+          )}
           <ControlLabel>month</ControlLabel>
           <FormControl
             value={month}
