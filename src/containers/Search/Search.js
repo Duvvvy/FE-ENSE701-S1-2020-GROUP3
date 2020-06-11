@@ -27,7 +27,7 @@ export default function SubmitSearch() {
   const [popupWindowTitle, setPopupTitle] = useState("");
 
   const [popupHelpWindow, setPopupHelp] = useState(false);
-  
+
   const [idChecked, setIdChecked] = useState(true);
   const [articleChecked, setArticleChecked] = useState(true);
   const [titleChecked, setTitleChecked] = useState(true);
