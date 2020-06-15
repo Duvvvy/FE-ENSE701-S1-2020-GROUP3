@@ -268,7 +268,7 @@ export default function SubmitSearch() {
     };
 
     console.log(postbodydata);
-    fetch('http://localhost:9000/articlesearch/search', {
+    fetch('https://seerdatabase.herokuapp.com/articlesearch/search', {
       method: 'POST',
       headers:{ "content-type": "application/json" },
       body: JSON.stringify(postbodydata)
