@@ -235,7 +235,6 @@ export default function SubmitSearch() {
   function handleSubmit(event) {
     event.preventDefault();
     console.log("called");
-    var user = 3; //We will need to change this later to retreive the user currently signed in
     var postbodydata = {
       field: field,
       operator: operator,
