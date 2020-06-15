@@ -10,7 +10,8 @@ script:
 deploy:
   provider: surge
   skip_cleanup: true
-  domain: ENSE701S12020Group3.surge.sh
+  github_token: $github_token
+  domain: ense701s12020group3.surge.sh
   project: ./build/
 on:
   branch: master
