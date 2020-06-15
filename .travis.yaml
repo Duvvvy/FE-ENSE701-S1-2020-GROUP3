@@ -15,3 +15,6 @@ deploy:
   project: ./build/
 on:
   branch: master
+branches:
+  only:
+  - master
