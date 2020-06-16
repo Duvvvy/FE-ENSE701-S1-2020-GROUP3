@@ -39,16 +39,14 @@ export default function SubmitArticle() {
         author.length > 0 &&
         title.length > 0 &&
         journal.length > 0 &&
-        year.length > 0 
+        year.length > 0
       );
     } else {
       return (
-
-        (author.length > 0 || 
-        editor.length > 00) &&
+        (author.length > 0 || editor.length > 0) &&
         title.length > 0 &&
         publisher.length > 0 &&
-        year.length > 0 &&
+        year.length > 0
       );
     }
   }
