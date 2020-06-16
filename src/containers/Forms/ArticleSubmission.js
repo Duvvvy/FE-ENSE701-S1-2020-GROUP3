@@ -34,17 +34,33 @@ export default function SubmitArticle() {
   const [dropdown, setDropdown] = useState("article");
 
   function validateForm() {
-    return (
-      article.length > 0 &&
-      author.length > 0 &&
-      title.length > 0 &&
-      journal.length > 0 &&
-      year.length > 0 &&
-      volume.length > 0 &&
-      number.length > 0 &&
-      pages.length > 0 &&
-      month.length > 0
-    );
+    if (dropdown == "article") {
+      return (
+        article.length > 0 &&
+        author.length > 0 &&
+        title.length > 0 &&
+        journal.length > 0 &&
+        year.length > 0 &&
+        volume.length > 0 &&
+        number.length > 0 &&
+        pages.length > 0 &&
+        month.length > 0
+      );
+    } else {
+      return (
+        article.length > 0 &&
+        author.length > 0 &&
+        editor.length > 00 &&
+        title.length > 0 &&
+        edition.length > 0 &&
+        publisher.length > 0 &&
+        series.length > 0 &&
+        year.length > 0 &&
+        volume.length > 0 &&
+        number.length > 0 &&
+        month.length > 0
+      );
+    }
   }
 
   function onUpload() {
