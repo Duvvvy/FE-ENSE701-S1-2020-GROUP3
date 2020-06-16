@@ -7,7 +7,10 @@ import "./search.css";
 import {Checkbox} from "react-bootstrap";
 import ObjectList from "react-object-list";
 import "react-object-list/dist/react-object-list.css";
+import Grid from '@material-ui/core/Grid';
 
+import AlertDialog from "../../components/AlertDialog";
+import HelpDialog from "../../components/HelpDialog";
 
 export default function SubmitSearch() {
   const [field, setField] = useState("title");
@@ -18,8 +21,13 @@ export default function SubmitSearch() {
   const [results, setResult] = useState([]);
   const [column, setColumn] = useState("id");
   const [asc, setAsc] = useState('true');
-  
-  
+
+  const [popupWindow, setPopup] = useState(false);
+  const [popupWindowMessage, setPopupMessage] = useState("");
+  const [popupWindowTitle, setPopupTitle] = useState("");
+
+  const [popupHelpWindow, setPopupHelp] = useState(false);
+
   const [idChecked, setIdChecked] = useState(true);
   const [articleChecked, setArticleChecked] = useState(true);
   const [titleChecked, setTitleChecked] = useState(true);
@@ -99,6 +107,11 @@ export default function SubmitSearch() {
       />
       )
     }
+  }
+
+  function handleHelp(event) {
+    event.preventDefault();
+    setPopupHelp(true);
   }
 
   function columnCheck() {
@@ -254,83 +267,113 @@ export default function SubmitSearch() {
     };
 
     console.log(postbodydata);
-    fetch('http://localhost:9000/articlesearch/search', {
+    fetch('https://seerdatabase.herokuapp.com/articlesearch/search', {
       method: 'POST',
       headers:{ "content-type": "application/json" },
       body: JSON.stringify(postbodydata)
     }).then(response => response.json())
     .then(response => {
       console.log(response.searchResult)
-      setResult(response.searchResult)     
+      setResult(response.searchResult)  
+      if(response.searchResult == 0){//Keep as == as it would break if it was ===
+        setPopupTitle("Article");
+        setPopupMessage("No Article(s) Found");
+        setPopup(true);
+      }   
     })
   }
 
   return (
     <div className="Article">
-      <form className="form-inline" onSubmit={handleSubmit}>
+      <form className="form-inline" >
         <div className="description">
           {field}  {operator} {value}
         </div>
 
         <div className="calendar">
-          <label>Date Range from </label>
-            <DatePicker
-            selected={datefrom}
-            onChange={date => setDateFrom(date)}
-            />
-          <label>to</label>
-          <DatePicker
-              selected={dateto}
-              onChange={date => setDateTo(date)}
-           />
+          <Grid container spacing={3}>
+            <Grid item xs={4}>
+              <label>Date Range from </label>
+              <DatePicker
+              selected={datefrom}
+              onChange={date => setDateFrom(date)}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <label>to</label>
+              <DatePicker
+                selected={dateto}
+                onChange={date => setDateTo(date)}
+              />
+            </Grid>
+            <Grid item xs>
+
+            </Grid>
+          </Grid>
         </div>
 
         <div className="input-search">
-          <div className="field">
-              <label>Field: </label>
-              <select 
-                value={field} 
-                onChange={(e) => setField(e.target.value)}
-                >
-                <option value="title">Article Title</option>
-                <option value="source">Article Source</option>
-                <option value="author">Author</option>
-                <option value="method">Method</option>
-              </select>
-          </div>
+          <Grid container spaceing={3}>
+            <Grid item xs>
+              <div className="field">
+                <label>Field: </label>
+                <select 
+                  value={field} 
+                  onChange={(e) => setField(e.target.value)}
+                  >
+                  <option value="title">Article Title</option>
+                  <option value="author">Article Author</option>
+                  <option value="researchmethod">Research Method</option>
+                  <option value="participants">Research Participants</option>
+                  <option value="method">Method</option>
+                  <option value="methodology">Methodology</option>
+                </select>
+              </div>
+            </Grid>
 
-          <div className="operator">
-            <label>Operator: </label>
-            <select 
-              value={operator} 
-              onChange={(e) => setOperator(e.target.value)}
-              >
-              <option value="contains">Contains</option>
-              <option value="does not contain">Does not contain</option>
-              <option value="begins with">Beigns with</option>
-              <option value="ends with">Ends with</option>
-              <option value="is equal to">Is equal to</option>
-            </select>
-          </div>
+            <Grid item xs>
+              <div className="operator">
+                <label>Operator: </label>
+                <select 
+                  value={operator} 
+                  onChange={(e) => setOperator(e.target.value)}
+                  >
+                  <option value="contains">Contains</option>
+                  <option value="does not contain">Does not contain</option>
+                  <option value="begins with">Beigns with</option>
+                  <option value="ends with">Ends with</option>
+                  <option value="is equal to">Is equal to</option>
+                </select>
+              </div>
+            </Grid>
 
-          <div className="value">
-            <label>Value: </label>
-            <input
-                type = "text"
-                value={value} 
-                onChange={(e) => setValue(e.target.value)}
-                />
-          </div>
-        </div>
+            <Grid item xs>
+              <div className="value">
+                <label>Value: </label>
+                <input
+                    type = "text"
+                    value={value}
+                    size="20"
+                    onChange={(e) => setValue(e.target.value)}
+                    />
+              </div>
 
-        <div className="sort">
+              <div className="help">
+                <button type="help" onClick={handleHelp}>
+                  ?
+                </button>
+              </div>
+            </Grid>
+
+            <Grid item xs>
+            <div className="sort">
           <div className="asc">
             <select 
               value={asc} 
               onChange={(e) => setAsc(e.target.value)}
               >
-              <option value={true}>Ascending</option>
-              <option value={false}>Descending</option>
+              <option value='true'>Ascending</option>
+              <option value='false'>Descending</option>
             </select>
           </div>
 
@@ -353,10 +396,28 @@ export default function SubmitSearch() {
             </select>
           </div>
         </div>
-          
-        <button disabled={!validateForm()} type="search">
+            </Grid>
+
+            <Grid item xs={1}>
+            <button disabled={!validateForm()} type="search" onClick={handleSubmit}>
         Search
         </button> 
+            </Grid>
+          </Grid>
+        </div>
+        <AlertDialog
+          popupWindow={popupWindow}
+          toggle={setPopup}
+          title={popupWindowTitle}
+          message={popupWindowMessage}
+        ></AlertDialog>
+
+          <HelpDialog
+          popupWindow={popupHelpWindow}
+          toggle={setPopupHelp}
+        ></HelpDialog>
+          
+
       </form>
 
       <div className="checkColumn">
