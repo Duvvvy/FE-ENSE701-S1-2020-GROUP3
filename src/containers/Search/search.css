@@ -8,11 +8,7 @@
     display:  inline;
 }
 
-.column {
-    display: inline;
-}
-
-.checkColumn {
+.help {
     display: inline;
 }
 
@@ -41,4 +37,12 @@
 
 .calendar {
     margin: 10px;
+}
+
+.checkColumn {
+    display: inline;
+}
+
+.column {
+    display: inline;
 }
