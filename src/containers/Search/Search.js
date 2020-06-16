@@ -248,7 +248,6 @@ export default function SubmitSearch() {
   function handleSubmit(event) {
     event.preventDefault();
     console.log("called");
-    var user = 3; //We will need to change this later to retreive the user currently signed in
     var postbodydata = {
       field: field,
       operator: operator,
@@ -275,7 +274,8 @@ export default function SubmitSearch() {
     }).then(response => response.json())
     .then(response => {
       console.log(response.searchResult)
-      setResult(response.searchResult)  
+      setResult(response.searchResult) 
+      // eslint-disable-next-line 
       if(response.searchResult == 0){//Keep as == as it would break if it was ===
         setPopupTitle("Article");
         setPopupMessage("No Article(s) Found");

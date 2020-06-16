@@ -8,7 +8,6 @@ import {
   DropdownButton,
 } from "react-bootstrap";
 import FileUpload from "../../components/FileUpload";
-import { render } from "@testing-library/react";
 import AlertDialog from "../../components/AlertDialog";
 import bibtexParse from "bibtex-parse-js";
 
@@ -26,7 +25,7 @@ export default function SubmitArticle() {
   const [publisher, setPublisher] = useState("");
   const [series, setSeries] = useState("");
   const [edition, setEdition] = useState("");
-  const [submissionresponse, setResponse] = useState("");
+  const [submissionresponse] = useState("");
   const [popupWindow, setPopup] = useState(false);
   const [popupWindowMessage, setPopupMessage] = useState("");
   const [popupWindowTitle, setPopupTitle] = useState("");
@@ -55,7 +54,7 @@ export default function SubmitArticle() {
       reader.onload = async (e) => {
         var file = e.target.result;
         var bib = bibtexParse.toJSON(file);
-        if (bib.length != 0) {
+        if (bib.length !== 0) {
           processBibtex(bib);
         } else {
           setPopupTitle("Internal Server Error");
@@ -75,29 +74,29 @@ export default function SubmitArticle() {
   function processBibtex(bib) {
     var tags = bib[0].entryTags;
     var entryType = bib[0].entryType;
-    if (entryType == "article" || entryType == "book") {
+    if (entryType === "article" || entryType === "book") {
       setArticle(bib[0].citationKey);
-      setAuthor(tags.author == null ? "" : tags.author);
-      setTitle(tags.title == null ? "" : tags.title);
-      setYear(tags.year == null ? "" : tags.year);
-      setVolume(tags.volume == null ? "" : tags.volume);
-      setNumber(tags.number == null ? "" : tags.number);
+      setAuthor(tags.author === null ? "" : tags.author);
+      setTitle(tags.title === null ? "" : tags.title);
+      setYear(tags.year === null ? "" : tags.year);
+      setVolume(tags.volume === null ? "" : tags.volume);
+      setNumber(tags.number === null ? "" : tags.number);
       setMonth(
-        tags.month == null
+        tags.month === null
           ? ""
           : (new Date(tags.month + " 1, 2012").getMonth() + 1).toString()
       );
-      if (entryType == "article") {
+      if (entryType === "article") {
         setDropdown("article");
-        setJournal(tags.journal == null ? "" : tags.journal);
-        setPages(tags.pages == null ? "" : tags.pages);
-      } else if (entryType == "book") {
+        setJournal(tags.journal === null ? "" : tags.journal);
+        setPages(tags.pages === null ? "" : tags.pages);
+      } else if (entryType === "book") {
         setDropdown("book");
         setArticle(bib[0].citationKey);
-        setPublisher(tags.publisher == null ? "" : tags.publisher);
-        setEdition(tags.edition == null ? "" : tags.edition);
-        setEditor(tags.editor == null ? "" : tags.editor);
-        setSeries(tags.series == null ? "" : tags.series);
+        setPublisher(tags.publisher === null ? "" : tags.publisher);
+        setEdition(tags.edition === null ? "" : tags.edition);
+        setEditor(tags.editor === null ? "" : tags.editor);
+        setSeries(tags.series === null ? "" : tags.series);
       }
     }
   }
@@ -108,7 +107,7 @@ export default function SubmitArticle() {
     var thePages = pages.split(["-"], 2);
     var user = 3; //We will need to change this later to retreive the user currently signed in
     var postbodydata;
-    if (dropdown == "article")
+    if (dropdown === "article")
       postbodydata = {
         type: dropdown,
         article: article,
@@ -120,10 +119,10 @@ export default function SubmitArticle() {
         number: number,
         userId: user,
         pagefrom: thePages[0],
-        pageto: thePages[1] == null ? thePages[0] : thePages[1],
+        pageto: thePages[1] === null ? thePages[0] : thePages[1],
         month: month,
       };
-    if (dropdown == "book") {
+    if (dropdown === "book") {
       postbodydata = {
         type: dropdown,
         article: article,
@@ -137,7 +136,6 @@ export default function SubmitArticle() {
         editor: editor,
         publisher: publisher,
         series: series,
-        author: author,
         edition: edition,
       };
     }
@@ -149,7 +147,7 @@ export default function SubmitArticle() {
         form: postbodydata,
       },
       function (error, response, body) {
-        if (response.statusCode == 200) {
+        if (response.statusCode === 200) {
           var resBody = JSON.parse(body);
           setPopupTitle("Success");
           setPopupMessage(

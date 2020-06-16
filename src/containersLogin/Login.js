@@ -25,7 +25,7 @@ export default function Login() {
       },
       function (error, response, body) {
         console.log("Hit");
-        if (response.statusCode == 200) {
+        if (response.statusCode === 200) {
           setPopupTitle("Success");
           setPopupMessage("Login Sucessful ");
           setPopup(true);
