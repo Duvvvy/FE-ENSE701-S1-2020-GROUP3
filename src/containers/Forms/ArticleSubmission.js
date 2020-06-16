@@ -161,7 +161,7 @@ export default function SubmitArticle() {
     request.post(
       {
         headers: { "content-type": "application/x-www-form-urlencoded" },
-        url: "http://localhost:9000/article/submitarticle",
+        url: "https://seerdatabase.herokuapp.com/article/submitarticle",
         form: postbodydata,
       },
       function (error, response, body) {
